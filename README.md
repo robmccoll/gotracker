@@ -1,3 +1,6 @@
+tracker for go
+==============
+
 Tracker is designed to signal a dynamic number of
 go routines to exit cleanly via a channel, boolean, or both.
 
@@ -9,6 +12,8 @@ each channel, channels are never removed.  Tracker _SHOULD NOT_ be used
 with a large number of go routines that will be constantly joining
 and leaving.
 
+methods
+-------
 - Join returns a channel that will fire when the tracker
  wants all go routines to exit. In order for the tracker
  to exit, there must be a matching call to Leave
