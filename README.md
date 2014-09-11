@@ -12,6 +12,9 @@ each channel, channels are never removed.  Tracker _SHOULD NOT_ be used
 with a large number of go routines that will be constantly joining
 and leaving.
 
+If Tracker isn't suited for your needs, you may also want to consider [Gustavo Niemeyer's](https://github.com/niemeyer) excellent
+[Tomb package](https://github.com/go-tomb/tomb).
+
 methods
 -------
 - Join returns a channel that will fire when the tracker
