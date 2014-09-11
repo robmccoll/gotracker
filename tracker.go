@@ -9,7 +9,7 @@ import (
 // Tracker is designed to signal a dynamic number of
 // go routines to exit cleanly via a channel, boolean, or both.
 type Tracker struct {
-	toSignal []*chan bool
+	toSignal []chan bool
 	lock     sync.Mutex
 	count    int64
 	stopping bool
@@ -18,13 +18,13 @@ type Tracker struct {
 // Join returns a channel that will fire when the tracker
 // wants all go routines to exit. In order for the tracker
 // to exit, there must be a matching call to Leave
-func (t *Tracker) Join() *chan bool {
+func (t *Tracker) Join() chan bool {
 	ch := make(chan bool, 1)
 	atomic.AddInt64(&t.count, int64(1))
 	t.lock.Lock()
 	defer t.lock.Unlock()
-	t.toSignal = append(t.toSignal, &ch)
-	return &ch
+	t.toSignal = append(t.toSignal, ch)
+	return ch
 }
 
 // Leave tells the tracker that a tracked go routine is exiting
@@ -50,7 +50,7 @@ func (t *Tracker) Count() int64 {
 func (t *Tracker) KillAll() {
 	t.stopping = true
 	for _, v := range t.toSignal {
-		*v <- true
+		close(v)
 	}
 	for atomic.LoadInt64(&t.count) != 0 {
 		time.Sleep(5 * time.Millisecond)
